@@ -5,6 +5,7 @@ import { ExerciseListComponent } from '../../../exercises/components/exercise-li
 @Component({
   selector: 'app-dashboard-page',
   imports: [ExerciseListComponent],
+  standalone: true,
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.css'
 })

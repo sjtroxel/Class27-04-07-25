@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-exercise-stop-watch',
@@ -8,11 +8,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   templateUrl: './exercise-stop-watch.component.html',
   styleUrl: './exercise-stop-watch.component.css'
 })
-export class ExerciseStopWatchComponent implements OnInit, OnDestroy {
+export class ExerciseStopWatchComponent implements OnInit {
+
+  private destroyRef = inject(DestroyRef)
+  // ngOnDestroy(): void {
+  //   throw new Error('Method not implemented.');
+  // }
   elapsedTime = 0
   isRunning = false
   timerId: any
-  logs: {date: Date, elapsedTime: number}[] = []
+  logs: {date: Date, elapsedTime: number}[] = [];
 
 // constructor() {
 //   console.log('Constructor called: Component is being created!');
@@ -22,24 +27,27 @@ ngOnInit(): void {
   console.log('ngOnInit called: Component initialized!')
 }
 
-ngOnDestroy(): void {
-  if (this.isRunning) {
-    clearInterval(this.timerId)
-    this.timerId = null;
-  }
-  console.log('ngOnDestroy called: Component destroyed!!');
-}
+// ngOnDestroy(): void {
+//   if (this.isRunning) {
+//     clearInterval(this.timerId)
+//     this.timerId = null;
+//   }
+//   console.log('ngOnDestroy called: Component destroyed!!');
+// }
 
   startStopwatchHandler() {
-
-    if (!this.isRunning) {
+       if (!this.isRunning) {
       this.isRunning = true
       this.timerId = setInterval(() => {
-
       // this.elapsedTime++
       console.log("Elapsed Time: ", this.elapsedTime / 1000);
       this.elapsedTime += 1000
-    }, 1000)
+    }, 1000);
+
+    this.destroyRef.onDestroy(() => {
+      console.log('DestroyRef Called: Component Destroyed! And Timer Cleared!');
+      clearInterval(this.timerId)
+    })
 
   }
   }
